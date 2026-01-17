@@ -126,7 +126,7 @@ const isActive = (slug: string) => currentPath.startsWith(`/${lang}/book/${slug}
             <!-- Mobile TOC -->
             <details class="md:hidden">
               <summary class="cursor-pointer select-none rounded-md border border-neutral-200 px-3 py-1.5 text-sm hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-800/60">
-                TOC
+                {lang === "ko" ? "목차" : "TOC"}
               </summary>
 
               <nav class="mt-2 rounded-md border border-neutral-200 bg-white p-2 dark:border-neutral-800 dark:bg-neutral-900">
