@@ -1,3 +1,16 @@
 @config "../../tailwind.config.js";
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@layer components {
+  /* inline code styling ( `like this` ) */
+  .prose :not(pre) > code {
+    @apply rounded bg-neutral-100 px-1.5 py-0.5 text-[0.95em] font-medium text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100;
+  }
+
+  /* remove the backticks that typography adds via CSS */
+  .prose :not(pre) > code::before,
+  .prose :not(pre) > code::after {
+    content: "" !important;
+  }
+}
