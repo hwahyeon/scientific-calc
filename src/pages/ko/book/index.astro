@@ -1,0 +1,38 @@
+---
+import BookLayout from "../../../layouts/BookLayout.astro";
+import { getCollection } from "astro:content";
+
+const chapters = (await getCollection("koBook"))
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+---
+
+<BookLayout
+  lang="ko"
+  chapters={chapters}
+  siteTitle="공학용 계산기 실전 가이드"
+  currentPath="/ko/book/"
+  pageTitle="목차"
+  description="공학용 계산기 실전 가이드의 전체 목차입니다."
+>
+  <h1 class="text-2xl font-semibold tracking-tight">목차</h1>
+
+  <ul class="mt-6 space-y-1">
+    {chapters.map((c) => (
+      <li>
+        <a
+          class="block rounded-md px-3 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
+          href={`/ko/book/${c.slug}/`}
+        >
+          {c.data.title}
+        </a>
+
+        {c.data.description ? (
+          <div class="mt-1 px-3 text-sm text-neutral-600 dark:text-neutral-400">
+            {c.data.description}
+          </div>
+        ) : null}
+      </li>
+    ))}
+  </ul>
+</BookLayout>
