@@ -1,0 +1,106 @@
+---
+import BookLayout from "../../../layouts/BookLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const chapters = (await getCollection("enBook")).filter((c) => !c.data.draft);
+  return chapters.map((c) => ({
+    params: { slug: c.slug },
+    props: { chapter: c },
+  }));
+}
+
+const { chapter } = Astro.props;
+
+const chapters = (await getCollection("enBook"))
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+
+const { Content } = await chapter.render();
+const currentPath = Astro.url.pathname;
+
+// Prev / Next
+const currentIndex = chapters.findIndex((c) => c.slug === chapter.slug);
+const prev = currentIndex > 0 ? chapters[currentIndex - 1] : null;
+const next =
+  currentIndex >= 0 && currentIndex < chapters.length - 1
+    ? chapters[currentIndex + 1]
+    : null;
+---
+
+<BookLayout
+  lang="en"
+  chapters={chapters}
+  currentPath={currentPath}
+  siteTitle="Scientific Calculator Practical Guide"
+  pageTitle={chapter.data.title}
+  description={chapter.data.description}
+>
+  <nav class="mb-6 flex items-center justify-between text-sm">
+    <a
+      class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+      href="/en/book/"
+    >
+      ← Contents
+    </a>
+
+    <div class="flex items-center gap-2">
+      {prev ? (
+        <a
+          class="rounded-md border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-800/60"
+          href={`/en/book/${prev.slug}/`}
+          title={prev.data.title}
+        >
+          ← Prev
+        </a>
+      ) : (
+        <span class="rounded-md border border-transparent px-3 py-1.5 text-neutral-400 dark:text-neutral-600">
+          ← Prev
+        </span>
+      )}
+
+      {next ? (
+        <a
+          class="rounded-md border border-neutral-200 px-3 py-1.5 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-800/60"
+          href={`/en/book/${next.slug}/`}
+          title={next.data.title}
+        >
+          Next →
+        </a>
+      ) : (
+        <span class="rounded-md border border-transparent px-3 py-1.5 text-neutral-400 dark:text-neutral-600">
+          Next →
+        </span>
+      )}
+    </div>
+  </nav>
+
+  <article class="prose prose-neutral max-w-none dark:prose-invert">
+    <h1>{chapter.data.title}</h1>
+    <Content />
+  </article>
+
+  <nav class="mt-10 flex items-center justify-between text-sm">
+    {prev ? (
+      <a
+        class="rounded-md border border-neutral-200 px-3 py-2 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-800/60"
+        href={`/en/book/${prev.slug}/`}
+      >
+        ← {prev.data.title}
+      </a>
+    ) : (
+      <span />
+    )}
+
+    {next ? (
+      <a
+        class="rounded-md border border-neutral-200 px-3 py-2 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-800/60"
+        href={`/en/book/${next.slug}/`}
+      >
+        {next.data.title} →
+      </a>
+    ) : (
+      <span />
+    )}
+  </nav>
+</BookLayout>

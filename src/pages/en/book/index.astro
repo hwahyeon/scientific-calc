@@ -1,0 +1,38 @@
+---
+import BookLayout from "../../../layouts/BookLayout.astro";
+import { getCollection } from "astro:content";
+
+const chapters = (await getCollection("enBook"))
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+---
+
+<BookLayout
+  lang="en"
+  chapters={chapters}
+  currentPath="/en/book/"
+  siteTitle="Scientific Calculator Practical Guide"
+  pageTitle="Table of contents"
+  description="The full table of contents for the Scientific Calculator Practical Guide."
+>
+  <h1 class="text-2xl font-semibold tracking-tight">Table of contents</h1>
+
+  <ul class="mt-6 space-y-1">
+    {chapters.map((c) => (
+      <li>
+        <a
+          class="block rounded-md px-3 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
+          href={`/en/book/${c.slug}/`}
+        >
+          {c.data.title}
+        </a>
+
+        {c.data.description ? (
+          <div class="mt-1 px-3 text-sm text-neutral-600 dark:text-neutral-400">
+            {c.data.description}
+          </div>
+        ) : null}
+      </li>
+    ))}
+  </ul>
+</BookLayout>
