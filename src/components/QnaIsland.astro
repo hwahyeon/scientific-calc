@@ -1,0 +1,14 @@
+---
+type Lang = "ko" | "en";
+
+const { uiLang = "ko" } = Astro.props as {
+  uiLang?: Lang;
+};
+---
+
+<div id="qna-root" data-ui-lang={uiLang}></div>
+
+<script
+  type="module"
+  src={new URL("../scripts/qna.ts", import.meta.url).pathname}
+></script>
