@@ -1,0 +1,20 @@
+---
+import BookLayout from "../../../layouts/BookLayout.astro";
+import QnaIsland from "../../../components/QnaIsland.astro";
+import { getCollection } from "astro:content";
+
+const chapters = (await getCollection("enBook"))
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+---
+
+<BookLayout
+  lang="en"
+  chapters={chapters}
+  currentPath="/en/qna/"
+  siteTitle="Scientific Calculator Practical Guide"
+  pageTitle="Q&A"
+  description="Q&A for the Scientific Calculator Practical Guide."
+>
+  <QnaIsland uiLang="en" />
+</BookLayout>

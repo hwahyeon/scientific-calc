@@ -1,0 +1,20 @@
+---
+import BookLayout from "../../../layouts/BookLayout.astro";
+import QnaIsland from "../../../components/QnaIsland.astro";
+import { getCollection } from "astro:content";
+
+const chapters = (await getCollection("koBook"))
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+---
+
+<BookLayout
+  lang="ko"
+  chapters={chapters}
+  currentPath="/ko/qna/"
+  siteTitle="공학용 계산기 실전 가이드"
+  pageTitle="Q&A"
+  description="공학용 계산기 실전 가이드 Q&A"
+>
+  <QnaIsland uiLang="ko" />
+</BookLayout>
